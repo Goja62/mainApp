@@ -7,16 +7,14 @@ use Illuminate\Http\Request;
 
 class ExampleController extends Controller
 {
-    public $name = 'Goja';
-    public $animales = ['dog', 'cat', 'hamster'];
     public function homepage()
     {
 
-        return view('homepage', ['name' => $this->name, 'animales' => $this->animales]);
+        return view('homepage');
     }
 
-    public function about()
+    public function aboutPage()
     {
-        return view('about');
+        return view('single-post');
     }
 }
