@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 
 class ExampleController extends Controller
 {
-    public function index()
+    public $name = 'Goja';
+    public $animales = ['dog', 'cat', 'hamster'];
+    public function homepage()
     {
-        return view('welcome');
+
+        return view('homepage', ['name' => $this->name, 'animales' => $this->animales]);
     }
 
     public function about()
