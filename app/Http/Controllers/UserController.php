@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function showCorrectHomepage()
+    {
+        if (Auth::check()) {
+            return view('homepage-feed');
+        } else {
+            return view('homepage');
+        }
+    }
     public function registerUser(Request $request)
     {
         $incomingFields = $request->validate(
@@ -32,5 +41,26 @@ class UserController extends Controller
         );
         User::create($incomingFields);
         return 'Uspješno ste se registrovali!';
+    }
+
+    public function login(Request $request)
+    {
+        $incomingFields = $request->validate(
+            [
+                'loginusername' => ['required'],
+                'loginpassword' => ['required']
+            ],
+            [
+                'loginusername.required' => 'Molim vas da unesete korisničko ime.',
+                'loginpassword.required' => 'Molim vas da unesete lozinku.'
+            ]
+        );
+
+        if (Auth::attempt(['username' => $incomingFields['loginusername'], 'password' => $incomingFields['loginpassword']])) {
+            $request->session()->regenerate();
+            return 'Uspješno ste se prijavili!';
+        } else {
+            return 'Neispravno korisničko ime ili lozinka.';
+        }
     }
 }
