@@ -39,8 +39,9 @@ class UserController extends Controller
                 'password.confirmed' => 'Lozinka i potvrda lozinke se ne poklapaju.'
             ]
         );
-        User::create($incomingFields);
-        return 'Uspješno ste se registrovali!';
+        $user = User::create($incomingFields);
+        Auth::login($user);
+        return redirect('/')->with('success', 'Uspešno ste se registrovali');
     }
 
     public function login(Request $request)
@@ -58,9 +59,19 @@ class UserController extends Controller
 
         if (Auth::attempt(['username' => $incomingFields['loginusername'], 'password' => $incomingFields['loginpassword']])) {
             $request->session()->regenerate();
-            return 'Uspješno ste se prijavili!';
+            return redirect('/')->with('success', 'Uspješno ste se prijavili!');
         } else {
-            return 'Neispravno korisničko ime ili lozinka.';
+            return redirect('/')->with('failure', 'Neispravno korisničko ime ili lozinka. Pokušajte ponovo.');
         }
+
+        return redirect('/');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/')->with('success', 'Uspješno ste se odjavili!');
     }
 }
