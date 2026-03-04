@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,13 @@ class PostController extends Controller
 
         // Store the post
         $newPost = Post::create($incomingFields);
-        session()->flash('success', 'Your post was created successfully.');
-        return redirect('/create-post');
+        session()->flash('success', 'Vaš članak je uspešno kreiran.');
+        return redirect("/post/{$newPost->id}");
+        // return redirect("/post/{$newPost->id}")->with('success', 'Your post was created successfully.');
+    }
+
+    public function viewSinglePost(Post $post)
+    {
+        return view('single-post', ['post' => $post]);
     }
 }
