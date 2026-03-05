@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -40,11 +39,30 @@ class PostController extends Controller
         return view('single-post', ['post' => $post]);
     }
 
+    public function showEditForm(Post $post)
+    {
+        return view('edit-post', ['post' => $post]);
+    }
+
+    public function actuallyUpdate(Post $post, Request $request)
+    {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields);
+        return back()->with('success', 'Podaci posta su promenjeni');
+    }
+
     public function delete(Post $post)
     {
-        if (Auth::user()->cannot('delete', $post)) {
-            return 'You cannot delete post';
-        }
+        // if (Auth::user()->cannot('delete', $post)) {
+        //     return 'You cannot delete post';
+        // }
         $post->delete();
 
         return redirect('/profile/' . Auth::user()->username)->with('success', 'Post je obrisan');
