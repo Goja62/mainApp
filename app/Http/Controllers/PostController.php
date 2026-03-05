@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -30,11 +31,22 @@ class PostController extends Controller
         $newPost = Post::create($incomingFields);
         session()->flash('success', 'Vaš članak je uspešno kreiran.');
         return redirect("/post/{$newPost->id}");
-        // return redirect("/post/{$newPost->id}")->with('success', 'Your post was created successfully.');
+        return redirect("/post/{$newPost->id}")->with('success', 'Your post was created successfully.');
     }
 
     public function viewSinglePost(Post $post)
     {
+        // $post['body'] = strip_tags(Str::markdown($post->body), '<p><ul><ol><li><strong><em><h3><br>');
         return view('single-post', ['post' => $post]);
+    }
+
+    public function delete(Post $post)
+    {
+        if (Auth::user()->cannot('delete', $post)) {
+            return 'You cannot delete post';
+        }
+        $post->delete();
+
+        return redirect('/profile/' . Auth::user()->username)->with('success', 'Post je obrisan');
     }
 }
