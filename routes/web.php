@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,3 +22,13 @@ Route::put('post/{post}', [PostController::class, 'actuallyUpdate'])->middleware
 
 //  Profile Relater Routes
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
+
+
+Route::get('/admins-only', function () {
+    return 'You cannot view this page';
+    // if (Gate::allows('vistiAdminPages')) {
+    //     return 'Only Admins';
+    // }
+
+    // return 'You cannot see this page';
+})->middleware('can:vistiAdminPages');
