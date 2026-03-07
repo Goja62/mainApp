@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class UserController extends Controller
 {
@@ -87,7 +90,17 @@ class UserController extends Controller
 
     public function storeAvatar(Request $request)
     {
-        $request->file('avatar')->store('avatars', 'public');
-        return 'Hay';
+        $request->validate([
+            'avatar' => ['required', 'image', 'max:8000']
+        ]);
+
+        $user = Auth::user();
+
+        $filename = $user->id . "-" . $user->username . "-" . uniqid() . ".jpg";
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($request->file("avatar"));
+        $imageData = $image->cover(120, 120)->toJpeg();
+        Storage::disk('public')->put('avatars/' . $filename, $imageData);
     }
 }
