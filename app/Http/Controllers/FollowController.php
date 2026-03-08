@@ -31,5 +31,9 @@ class FollowController extends Controller
         return back()->with('success', 'Youser succesfuly followed');
     }
 
-    public function removeFollow() {}
+    public function removeFollow(User $user)
+    {
+        Follow::where([['user_id', '=', Auth::user()->id], ['followeduser', '=', $user->id]])->delete();
+        return back()->with('success', 'User succesfully unfolowed');
+    }
 }

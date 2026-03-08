@@ -3,14 +3,24 @@
         <h2>
             <img class="avatar-small" src="{{ $avatar }}" />
             {{ $username }}
-            <form class="ml-2 d-inline" action="/create-follow/{{ $username }}" method="POST">
-                @csrf
-                <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
-                <!-- <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button> -->
+            @auth
+                @if (!$currentlyFoolowing && Auth::user()->username !== $username)
+                    <form class="ml-2 d-inline" action="/create-follow/{{ $username }}" method="POST">
+                        @csrf
+                        <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
+                    </form>
+                @endif
+                @if ($currentlyFoolowing)
+                    <form class="ml-2 d-inline" action="/remove-follow/{{ $username }}" method="POST">
+                        @csrf
+                        <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button>
+                    </form>
+                @endif
                 @if (Auth::user()->username === $username)
                     <a class="btn btn-secondary btn-sm" href="/manage/avatar">Manage Avatar</a>
                 @endif
-            </form>
+
+            @endauth
         </h2>
 
         <div class="profile-nav nav nav-tabs pt-2 mb-4">

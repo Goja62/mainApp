@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +81,12 @@ class UserController extends Controller
 
     public function profile(User $user)
     {
-        return view('profile-posts', ['avatar' => $user->avatar,  'username' => $user->username, 'posts' => $user->posts()->latest()->get(), 'postCount' => $user->posts()->count()]);
+        $currentlyFoolowing = 0;
+
+        if (Auth::check()) {
+            $currentlyFoolowing = Follow::where([['user_id', '=', Auth::user()->id], ['followeduser', '=', $user->id]])->count();
+        }
+        return view('profile-posts', ['currentlyFoolowing' => $currentlyFoolowing, 'avatar' => $user->avatar,  'username' => $user->username, 'posts' => $user->posts()->latest()->get(), 'postCount' => $user->posts()->count()]);
     }
 
     public function showAvatarForm()
