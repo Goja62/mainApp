@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 // use Illuminate\Support\Facades\Gate;
@@ -34,3 +35,7 @@ Route::get('/admins-only', function () {
 
     // return 'You cannot see this page';
 })->middleware('can:vistiAdminPages');
+
+//  Follow Relater Routes
+Route::post('/create-follow/{user:username}', [FollowController::class, 'createFollow'])->middleware('mustBeLoggedIn');
+Route::post('/remove-follow/{user:username}', [FollowController::class, 'removeFollow'])->middleware('mustBeLoggedIn');

@@ -1,9 +1,9 @@
 <x-layout>
     <div class="container py-md-5 container--narrow">
         <h2>
-            <img class="avatar-small" src="{{ Auth::user()->avatar }}" />
+            <img class="avatar-small" src="{{ $avatar }}" />
             {{ $username }}
-            <form class="ml-2 d-inline" action="#" method="POST">
+            <form class="ml-2 d-inline" action="/create-follow/{{ $username }}" method="POST">
                 @csrf
                 <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
                 <!-- <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button> -->
