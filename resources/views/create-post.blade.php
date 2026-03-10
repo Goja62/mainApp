@@ -1,12 +1,12 @@
-<x-layout>
+<x-layout doctitle="Create New Post">
     <div class="container py-md-5 container--narrow">
         <form action="/create-post" method="POST">
             @csrf
             @method('POST')
             <div class="form-group">
                 <label for="post-title" class="text-muted mb-1"><small>Title</small></label>
-                <input name="title" id="post-title" class="form-control form-control-lg form-control-title" type="text"
-                    placeholder="" autocomplete="off" value="{{ old('title') }}" />
+                <input name="title" id="post-title" class="form-control form-control-lg form-control-title"
+                    type="text" placeholder="" autocomplete="off" value="{{ old('title') }}" />
                 @error('title')
                     <p class="m-0 small alert alert-danger shadow-sm">{{ $message }}</p>
                 @enderror
