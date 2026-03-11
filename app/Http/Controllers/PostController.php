@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Post as GlobalPost;
 
 class PostController extends Controller
 {
@@ -66,5 +67,13 @@ class PostController extends Controller
         $post->delete();
 
         return redirect('/profile/' . Auth::user()->username)->with('success', 'Post je obrisan');
+    }
+
+    public function search($term)
+    {
+        // return Post::where('title', 'LIKE', '%' . $term . '%')->orWhere('body', 'LIKE', '%' . $term . '%')->with('user:id,username,avatar')->get();
+        $posts = Post::search($term)->get();
+        $posts->load('user:id,username,avatar');
+        return $posts;
     }
 }
