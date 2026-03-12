@@ -30,6 +30,7 @@
             <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-white">OurApp</a></h4>
             @auth
                 <div class="flex-row my-3 my-md-0">
+                    <livewire:search />
                     <a href="#" class="text-white mr-2 header-search-icon" title="Search" data-toggle="tooltip"
                         data-placement="bottom"><i class="fas fa-search"></i></a>
                     <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip"
