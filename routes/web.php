@@ -1,8 +1,11 @@
 <?php
 
+use App\Events\ChatMessage;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -42,3 +45,18 @@ Route::get('/admins-only', function () {
 //  Follow Relater Routes
 Route::post('/create-follow/{user:username}', [FollowController::class, 'createFollow'])->middleware('mustBeLoggedIn');
 Route::post('/remove-follow/{user:username}', [FollowController::class, 'removeFollow'])->middleware('mustBeLoggedIn');
+
+
+// Chat Routes
+Route::post('/send-chat-message', function (Request $request) {
+    $formFields = $request->validate([
+        'textvalue' => 'required'
+    ]);
+
+    if (!trim(strip_tags($formFields['textvalue']))) {
+        return response()->noContent();
+    }
+
+    broadcast(new ChatMessage(['username' => Auth::user()->username, 'textvalue' => strip_tags($request->texvalue), 'avatar' => Auth::user()->avatar]))->toOthers();
+    return response()->noContent();
+})->middleware('mustBeLoggedIn');
