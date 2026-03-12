@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OurExampleEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Follow;
 use App\Models\User;
@@ -64,6 +65,7 @@ class UserController extends Controller
 
         if (Auth::attempt(['username' => $incomingFields['loginusername'], 'password' => $incomingFields['loginpassword']])) {
             $request->session()->regenerate();
+            event(new OurExampleEvent(['username' => Auth::user()->username, 'action' => 'login']));
             return redirect('/')->with('success', 'Uspješno ste se prijavili!');
         } else {
             return redirect('/')->with('failure', 'Neispravno korisničko ime ili lozinka. Pokušajte ponovo.');
@@ -74,6 +76,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+        event(new OurExampleEvent(['username' => Auth::user()->username, 'action' => 'logout']));
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
