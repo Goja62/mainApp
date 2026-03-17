@@ -31,8 +31,9 @@
             @auth
                 <div class="flex-row my-3 my-md-0">
                     <livewire:search />
-                    <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip"
-                        data-placement="bottom"><i class="fas fa-comment"></i></span>
+                    <livewire:chat />
+
+
                     <a href="/profile/{{ Auth::user()->username }}" class="mr-2"><img title="My Profile"
                             data-toggle="tooltip" data-placement="bottom"
                             style="width: 32px; height: 32px; border-radius: 16px" src="{{ Auth::user()->avatar }}" /></a>
@@ -97,11 +98,6 @@
             rights reserved.
         </p>
     </footer>
-    @auth
-        <div data-username={{ Auth::user()->username }} data-avatar={{ Auth::user()->avatar }} id="chat-wrapper"
-            class="chat-wrapper shadow border-top border-left border-right"></div>
-
-    @endauth
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
