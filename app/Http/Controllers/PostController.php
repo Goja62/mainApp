@@ -30,7 +30,7 @@ class PostController extends Controller
         // Store the post
         $newPost = Post::create($incomingFields);
         session()->flash('success', 'Vaš članak je uspešno kreiran.');
-        return redirect("/post/{$newPost->id}");
+        // return redirect("/post/{$newPost->id}");
         return redirect("/post/{$newPost->id}")->with('success', 'Your post was created successfully.');
     }
 
