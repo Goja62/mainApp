@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NewPostEmail;
+use App\Mail\SampleEmail;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Post as GlobalPost;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -19,7 +21,7 @@ class PostController extends Controller
     {
         // Validation
         $incomingFields = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => 'required',
             'body' => 'required'
         ]);
 
@@ -27,11 +29,9 @@ class PostController extends Controller
         $incomingFields['body'] = strip_tags($incomingFields['body']);
         $incomingFields['user_id'] = Auth::id();
 
-        // Store the post
         $newPost = Post::create($incomingFields);
-        session()->flash('success', 'Vaš članak je uspešno kreiran.');
-        // return redirect("/post/{$newPost->id}");
-        return redirect("/post/{$newPost->id}")->with('success', 'Your post was created successfully.');
+
+        return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
     }
 
     public function viewSinglePost(Post $post)

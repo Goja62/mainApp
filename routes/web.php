@@ -2,6 +2,7 @@
 
 use App\Events\ChatMessage;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -60,3 +61,6 @@ Route::post('/send-chat-message', function (Request $request) {
     broadcast(new ChatMessage(['username' => Auth::user()->username, 'textvalue' => strip_tags($request->texvalue), 'avatar' => Auth::user()->avatar]))->toOthers();
     return response()->noContent();
 })->middleware('mustBeLoggedIn');
+
+
+Route::get('send-mail', [MailController::class, 'index']);
