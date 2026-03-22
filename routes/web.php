@@ -61,6 +61,3 @@ Route::post('/send-chat-message', function (Request $request) {
     broadcast(new ChatMessage(['username' => Auth::user()->username, 'textvalue' => strip_tags($request->texvalue), 'avatar' => Auth::user()->avatar]))->toOthers();
     return response()->noContent();
 })->middleware('mustBeLoggedIn');
-
-
-Route::get('send-mail', [MailController::class, 'index']);
