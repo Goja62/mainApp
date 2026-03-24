@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Events\OurExampleEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Follow;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Post as GlobalPost;
 
 class UserController extends Controller
 {
@@ -21,7 +24,19 @@ class UserController extends Controller
         if (Auth::check()) {
             return view('homepage-feed', ['posts' => Auth::user()->feedPosts()->latest()->paginate(4)]);
         } else {
-            return view('homepage');
+            // if (Cache::has('postCount')) {
+            //     $postCount = Cache::get('postCount');
+            // } else {
+            //     sleep(5);
+            //     $postCount = Post::count();
+            //     Cache::put('postCount', $postCount, 20);
+            // }
+            $postCount = Cache::remember('postCount', 20, function () {
+                sleep(5);
+                return Post::count();
+            });
+
+            return view('homepage', ['postCount' => $postCount]);
         }
     }
     public function registerUser(Request $request)
