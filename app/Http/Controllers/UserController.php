@@ -32,7 +32,7 @@ class UserController extends Controller
             //     Cache::put('postCount', $postCount, 20);
             // }
             $postCount = Cache::remember('postCount', 20, function () {
-                sleep(5);
+                // sleep(5);
                 return Post::count();
             });
 
@@ -157,5 +157,21 @@ class UserController extends Controller
         }
 
         return back()->with('success', 'Avatar je promenjen');
+    }
+
+    public function loginApi(Request $request)
+    {
+        $incomingFields = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($incomingFields)) {
+            $user = User::where('username', $incomingFields['username'])->first();
+            $token = $user->createToken('ourapptoken')->plainTextToken;
+            return $token;
+        }
+
+        return 'Sorry!';
     }
 }
